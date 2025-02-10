@@ -34,10 +34,14 @@
         }
 
         /* 3D Card Container */
+           <style>
+        /* Previous styles remain the same until card-container */
+
+        /* 3D Card Container - Landscape */
         #card-container {
             position: fixed;
-            width: 240px;
-            height: 160px;
+            width: 280px;  /* Landscape width */
+            height: 160px; /* Landscape height */
             bottom: 50%;
             left: 50%;
             transform: translate(-50%, 50%) perspective(1000px);
@@ -59,7 +63,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 20px;
+            border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
@@ -77,8 +81,12 @@
         .card-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Changed from cover to contain */
         }
+
+        /* Rest of your existing styles remain same */
+    </style>
+
 
         /* Profile Section */
         .profile-card {
@@ -213,64 +221,39 @@
         </a>
     </div>
 
-    <!-- 3D Card Container -->
+   <!-- 3D Card Container -->
     <div id="card-container">
         <div class="rotating-card">
             <div class="card-face card-front">
-                <img src="Your paragraph text.jpg" class="card-image" alt="Business Card Front">
+                <img src="card-front.jpg" class="card-image" alt="Business Card Front">
             </div>
             <div class="card-face card-back">
-                <img src="Your paragraph text (1).png" class="card-image" alt="Business Card Back">
+                <img src="card-back.jpg" class="card-image" alt="Business Card Back">
             </div>
         </div>
     </div>
 
     <script>
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let currentRotation = { x: 0, y: 0 };
-        const card = document.querySelector('.rotating-card');
+        // Previous JavaScript remains same with these changes:
 
-        // Increased touch sensitivity (0.4 instead of 0.2)
-        const ROTATION_SENSITIVITY = 0.4;
+        // Increased rotation sensitivity for landscape
+        const ROTATION_SENSITIVITY = 0.6; // Increased from 0.4
 
-        // Camera Access
-        async function initializeCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'environment',
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    }
-                });
-                document.getElementById('camera-video').srcObject = stream;
-                document.querySelector('.loading').style.display = 'none';
-            } catch (error) {
-                console.error('Camera error:', error);
-                document.querySelector('.loading').textContent = 'Camera access required for AR experience';
-            }
-        }
+        // Modified touchmove handler
+        document.addEventListener('touchmove', (e) => {
+            const deltaX = e.touches[0].clientX - touchStartX;
+            const deltaY = e.touches[0].clientY - touchStartY;
+            
+            // Adjusted rotation axes for landscape
+            const rotateY = currentRotation.y + deltaX * ROTATION_SENSITIVITY;
+            const rotateX = currentRotation.x - deltaY * (ROTATION_SENSITIVITY * 0.6);
+            
+            card.style.transform = `
+                rotateX(${rotateX}deg) 
+                rotateY(${rotateY}deg)
+            `;
+        });
 
-        // Touch Handling with increased sensitivity
-        function setupInteractions() {
-            document.addEventListener('touchstart', (e) => {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-            });
-
-            document.addEventListener('touchmove', (e) => {
-                const deltaX = e.touches[0].clientX - touchStartX;
-                const deltaY = e.touches[0].clientY - touchStartY;
-                
-                const rotateY = currentRotation.y + deltaX * ROTATION_SENSITIVITY;
-                const rotateX = currentRotation.x - deltaY * ROTATION_SENSITIVITY;
-                
-                card.style.transform = `
-                    rotateX(${rotateX}deg) 
-                    rotateY(${rotateY}deg)
-                `;
-            });
 
             document.addEventListener('touchend', () => {
                 currentRotation = {
