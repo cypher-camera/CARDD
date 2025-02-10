@@ -33,11 +33,11 @@
             transform: scaleX(-1);
         }
 
-        /* 2D Card Container */
+        /* 3D Card Container */
         #card-container {
             position: fixed;
-            width: 300px;
-            height: 150px;
+            width: 500px;
+            height: 300px;
             bottom: 50%;
             left: 50%;
             transform: translate(-50%, 50%) perspective(1000px);
@@ -49,12 +49,29 @@
         .rotating-card {
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transform-style: preserve-3d;
             transition: transform 0.1s;
+            position: relative;
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-front {
+            background: #ffffff;
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            background: #f0f0f0;
+            transform: rotateY(180deg);
         }
 
         .card-image {
@@ -100,22 +117,34 @@
             width: 75px;
             height: 75px;
             border-radius: 12px;
-            background: rgba(0, 0, 0, 0);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             transition: all 0.2s ease;
             backdrop-filter: blur(5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .social-btn:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
+        }
+
+        .instagram {
+            background: linear-gradient(45deg, #405DE6, #833AB4, #E1306C);
+        }
+
+        .twitter {
+            background: #1DA1F2;
+        }
+
+        .linkedin {
+            background: #0077B5;
         }
 
         .social-btn i {
             font-size: 2rem;
-            color: #ffffff;
+            color: white;
         }
 
         /* Loading Overlay */
@@ -136,8 +165,8 @@
 
         @media (max-width: 768px) {
             #card-container {
-                width: 400px;
-                height: 250px;
+                width: 250px;
+                height: 400px;
             }
             
             .profile-card {
@@ -151,8 +180,8 @@
             }
             
             .social-btn {
-                width: 45px;
-                height: 45px;
+                width: 55px;
+                height: 55px;
             }
         }
     </style>
@@ -166,28 +195,33 @@
 
     <!-- Profile Section -->
     <div class="profile-card">
-        <img src="WIN_20241012_12_42_31_Pro.jpg" class="profile-image" alt="Profile">
+        <img src="WhatsApp_Image_2025-02-10_at_21.26.22-removebg-preview.png" class="profile-image" alt="Profile">
         <h2>Archit Jindal</h2>
         <p>AR Developer</p>
     </div>
 
     <!-- Social Links -->
     <div class="social-container">
-        <a href="https://www.instagram.com" class="social-btn" target="_blank">
+        <a href="https://www.instagram.com" class="social-btn instagram" target="_blank">
             <i class="fab fa-instagram"></i>
         </a>
-        <a href="https://twitter.com" class="social-btn" target="_blank">
+        <a href="https://twitter.com" class="social-btn twitter" target="_blank">
             <i class="fab fa-twitter"></i>
         </a>
-        <a href="https://linkedin.com" class="social-btn" target="_blank">
+        <a href="https://linkedin.com" class="social-btn linkedin" target="_blank">
             <i class="fab fa-linkedin"></i>
         </a>
     </div>
 
-    <!-- 2D Card Container -->
+    <!-- 3D Card Container -->
     <div id="card-container">
         <div class="rotating-card">
-            <img src="front.jpg" class="card-image" alt="Business Card">
+            <div class="card-face card-front">
+                <img src="Your paragraph text.jpg" class="card-image" alt="Business Card Front">
+            </div>
+            <div class="card-face card-back">
+                <img src="Your paragraph text (1).png" class="card-image" alt="Business Card Back">
+            </div>
         </div>
     </div>
 
@@ -196,6 +230,9 @@
         let touchStartY = 0;
         let currentRotation = { x: 0, y: 0 };
         const card = document.querySelector('.rotating-card');
+
+        // Increased touch sensitivity (0.4 instead of 0.2)
+        const ROTATION_SENSITIVITY = 0.4;
 
         // Camera Access
         async function initializeCamera() {
@@ -215,7 +252,7 @@
             }
         }
 
-        // Touch Handling
+        // Touch Handling with increased sensitivity
         function setupInteractions() {
             document.addEventListener('touchstart', (e) => {
                 touchStartX = e.touches[0].clientX;
@@ -226,8 +263,8 @@
                 const deltaX = e.touches[0].clientX - touchStartX;
                 const deltaY = e.touches[0].clientY - touchStartY;
                 
-                const rotateY = currentRotation.y + deltaX * 0.2;
-                const rotateX = currentRotation.x - deltaY * 0.2;
+                const rotateY = currentRotation.y + deltaX * ROTATION_SENSITIVITY;
+                const rotateX = currentRotation.x - deltaY * ROTATION_SENSITIVITY;
                 
                 card.style.transform = `
                     rotateX(${rotateX}deg) 
