@@ -81,17 +81,20 @@
         }
 
         /* Profile Section */
+      /* Profile Section - Fixed Mobile Image Display */
         .profile-card {
             position: fixed;
-            top: 5%;
+            top: 5vh;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 3;
+            z-index: 10; /* Increased z-index */
             text-align: center;
-            background: rgba(255, 255, 255, 0);
+            background: rgba(255, 255, 255, 0.9);
             padding: 1rem;
             border-radius: 15px;
             max-width: 90%;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .profile-image {
@@ -100,6 +103,34 @@
             border-radius: 50%;
             margin-bottom: 0.5rem;
             border: 2px solid #fff;
+            object-fit: cover; /* Ensures image fills circle */
+            display: block; /* Fixes mobile spacing issues */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Rest of your existing styles remain same */
+        
+        @media (max-width: 768px) {
+            .profile-card {
+                top: 3vh;
+                padding: 0.8rem;
+                background: rgba(255, 255, 255, 0.95);
+            }
+            
+            .profile-image {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .profile-card h2 {
+                font-size: 1.2rem;
+                margin: 0.3rem 0;
+            }
+            
+            .profile-card p {
+                font-size: 0.9rem;
+            }
         }
 
         /* Social Buttons */
